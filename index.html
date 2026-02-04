@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For You 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ffd6e8, #ffeef6);
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+    }
+
+    .card {
+      width: min(92vw, 420px);
+      background: #fff;
+      border-radius: 24px;
+      padding: 28px 24px 30px;
+      box-shadow: 0 20px 50px rgba(255, 105, 180, 0.25);
+      text-align: center;
+      animation: floatIn 0.9s ease-out;
+    }
+
+    @keyframes floatIn {
+      from { transform: translateY(20px) scale(0.98); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .heart {
+      font-size: 42px;
+      animation: beat 1.2s infinite;
+    }
+
+    @keyframes beat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    h1 {
+      margin: 10px 0 6px;
+      font-size: 22px;
+      color: #ff4d88;
+    }
+
+    p {
+      margin: 0 0 18px;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .question {
+      font-weight: 600;
+      margin: 16px 0 10px;
+      color: #333;
+    }
+
+    .btns {
+      position: relative;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    button {
+      border: none;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+
+    .yes {
+      background: #ff4d88;
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(255, 77, 136, .35);
+    }
+
+    .yes:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(255, 77, 136, .45);
+    }
+
+    .no {
+      position: absolute;
+      background: #f2f2f2;
+      color: #999;
+      box-shadow: 0 8px 18px rgba(0,0,0,.12);
+    }
+
+    .progress {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 18px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffd1e2;
+    }
+
+    .dot.active { background: #ff4d88; }
+
+    .success {
+      display: none;
+      animation: pop .5s ease;
+    }
+
+    @keyframes pop {
+      from { transform: scale(.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .confetti {
+      position: fixed;
+      top: -10px;
+      width: 8px;
+      height: 14px;
+      background: #ff4d88;
+      animation: fall 3s linear infinite;
+      opacity: .8;
+    }
+
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(360deg); }
+    }
+
+    footer {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="heart">💗</div>
+    <h1>Hey Cutie ✨</h1>
+    <p>Bas 3 chhote se sawaal… pookie vibes only 🧸</p>
+
+    <div id="qa">
+      <div class="question" id="q">1) Kya aapne mujhe maaf kar diya?</div>
+      <div class="btns" id="btns">
+        <button class="yes" id="yes">Yes 💖</button>
+        <button class="no" id="no">No 🙈</button>
+      </div>
+    </div>
+
+    <div class="success" id="success">
+      <h1>Yaaay! 🥰</h1>
+      <p>Thank you for saying yes to everything 💞</p>
+      <p>Forever starts here ✨</p>
+    </div>
+
+    <div class="progress">
+      <div class="dot active" id="d1"></div>
+      <div class="dot" id="d2"></div>
+      <div class="dot" id="d3"></div>
+    </div>
+
+    <footer>Made with 💕 & pookie energy</footer>
+  </div>
+
+  <script>
+    const questions = [
+      '1) Kya aapne mujhe maaf kar diya?',
+      '2) Do you love me? 💕',
+      '3) Mere bachchon ki maa banogi? 🥹'
+    ];
+
+    let step = 0;
+    const q = document.getElementById('q');
+    const yes = document.getElementById('yes');
+    const no = document.getElementById('no');
+    const btns = document.getElementById('btns');
+    const success = document.getElementById('success');
+    const qa = document.getElementById('qa');
+    const dots = [document.getElementById('d1'), document.getElementById('d2'), document.getElementById('d3')];
+
+    function updateDots() {
+      dots.forEach((d, i) => d.classList.toggle('active', i === step));
+    }
+
+    function nextQ() {
+      step++;
+      if (step < questions.length) {
+        q.textContent = questions[step];
+        updateDots();
+      } else {
+        qa.style.display = 'none';
+        success.style.display = 'block';
+        sprinkleConfetti();
+      }
+    }
+
+    yes.addEventListener('click', nextQ);
+
+    // NO button runs away 🏃‍♂️💨
+    const moveNo = () => {
+      const rect = btns.getBoundingClientRect();
+      const pad = 10;
+      const x = Math.random() * (rect.width - no.offsetWidth - pad);
+      const y = Math.random() * (rect.height - no.offsetHeight - pad);
+      no.style.transform = `translate(${x}px, ${y}px)`;
+    };
+
+    no.addEventListener('mouseenter', moveNo);
+    no.addEventListener('touchstart', moveNo);
+
+    function sprinkleConfetti() {
+      for (let i = 0; i < 40; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.background = ['#ff4d88', '#ffd1e2', '#ff9ac1'][Math.floor(Math.random()*3)];
+        c.style.animationDuration = 2 + Math.random() * 2 + 's';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 4000);
+      }
+    }
+  </script>
+</body>
+</html>
